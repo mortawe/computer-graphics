@@ -11,9 +11,11 @@
 
 using namespace std;
 
+int WINDOW_SIZE = 900;
+
 int main(int argc, const char *argv[]) {
     if (!glfwInit()) exit(EXIT_FAILURE);
-    auto window = glfwCreateWindow(900, 900, "Simple example", NULL, NULL);
+    auto window = glfwCreateWindow(WINDOW_SIZE, WINDOW_SIZE, "Simple example", NULL, NULL);
     if (!window) {
         glfwTerminate();
         exit(EXIT_FAILURE);
@@ -26,15 +28,11 @@ int main(int argc, const char *argv[]) {
     glEnable(GL_LIGHTING);
     glEnable(GL_DEPTH_TEST);
 
-    pyramid = new Pyramid{
-            vector<Polygon>{},
-            vector<Polygon>{},
-            4, 50, 200, 35, 100,
-            Point{0, 0, 0},
-    };
-    pyramid->countPyramid();
+    pyramid = new Pyramid(4, 50, 200, 35, 100);
+    pyramid->count();
 
     Box box = Box{};
+    box.init(multy);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -43,45 +41,52 @@ int main(int argc, const char *argv[]) {
     materials();
 
     uint texture = readTexture();
-    if (!texture){
-//        cout << "Image could not be opened\n";
+    if (!texture) {
+        cout << "Image could not be opened\n";
         return -5;
     }
-    readConfig(pyramid);
-    if (isTextOn){
-        glEnable(GL_TEXTURE_2D);
-        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    }
-    GLfloat start_frame = glfwGetTime();
-    long long fps = 0;
+//    GLfloat delta_time;
+//    readConfig(pyramid);
+//    if (isTextOn){
+//        glEnable(GL_TEXTURE_2D);
+//        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+//    }
+//    GLfloat start_frame = glfwGetTime();
+//    long long fps = 0;
     while (!glfwWindowShouldClose(window)) {
-        GLfloat current_frame = glfwGetTime();
-        if (current_frame - start_frame >= 5) {
-            break;
-        }
-        fps++;
+//        GLfloat current_frame = glfwGetTime();
+//        if (current_frame - start_frame >= 5) {
+//            break;
+//        }
+//        fps++;
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
+        glTranslatef(WINDOW_SIZE / 2, WINDOW_SIZE / 2, WINDOW_SIZE / 2);
         glScalef(zoom, zoom, zoom);
-        glTranslatef(450, 450, 450);
         box.draw();
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         if (isChangeView) glRotatef(90, 0, 1, 0);
+        glTranslatef(WINDOW_SIZE / 2 + pyramid->translationX,
+                     WINDOW_SIZE / 2 + pyramid->translationY,
+                     WINDOW_SIZE / 2 + pyramid->translationZ);
+        glMatrixMode(GL_MODELVIEW);
         glScalef(zoom, zoom, zoom);
-        glTranslatef(450 + translationX, 450 + translationY, 450 + translationZ);
-        pyramid->drawBreakPoints();
-        glRotatef(rotationX, 1, 0, 0);
-        glRotatef(rotationY, 0, 1, 0);
-        glRotatef(rotationZ, 0, 0, 1);
+        pyramid->drawBP();
+        glRotatef(pyramid->rotationY, 0, -1, 0);
+        glRotatef(pyramid->rotationX, 1, 0, 0);
+
+        glRotatef(pyramid->rotationZ, 0, 0, 1);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        glOrtho(0, min(width, height), 0, min(width, height), -2000, 2000);
+        glOrtho(0, min(width, height), 0, min(width, height),
+                -2000, 2000);
         if (isMotionOn) {
             pyramid->animate();
         }
-        pyramid->initVAO();
+        glCallList(pyramid->list);
+
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         if (isChangeView) glRotatef(90, 0, 1, 0);
@@ -89,11 +94,14 @@ int main(int argc, const char *argv[]) {
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-    cout << fps / 5;
+//    cout << fps / 5;
     glfwDefaultWindowHints();
     glfwDestroyWindow(window);
     glfwTerminate();
+    pyramid->destroy();
     delete pyramid;
+    box.destroy();
+
     return 0;
 }
 
