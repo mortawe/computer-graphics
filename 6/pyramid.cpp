@@ -141,7 +141,7 @@ struct Pyramid {
 
     void addPolygon(Polygon p);
 
-    void initVAO();
+    void draw();
 
     vector<Point> breakPoints;
 
@@ -167,7 +167,7 @@ struct Pyramid {
     void drawBreakPoints();
 };
 
-void Pyramid::initVAO() {
+void Pyramid::draw() {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glBegin(GL_TRIANGLES);
     for (int j = 1; j < layersN * 2 + 1; j++) {
@@ -185,7 +185,7 @@ void Pyramid::initVAO() {
 void Pyramid::drawBreakPoints(){
     glPointSize(5);
     glBegin(GL_POINTS);
-    for (int i = 0; i < (vertNum + 1); i++) {
+    for (int i = 0; i < breakPoints.size(); i++) {
         glColor3f(0, 1, 0);
         glVertex3f(breakPoints[i].x, breakPoints[i].y, breakPoints[i].z);
     }
@@ -276,6 +276,7 @@ countPyramid() {
         }
         v = rv;
     }
+
 }
 
 GLfloat EPS = 0.00001;
@@ -314,4 +315,5 @@ void Pyramid::animate() {
     translationX += speed.x;
     translationY += speed.y;
     translationZ += speed.z;
+
 }

@@ -29,7 +29,7 @@ int main(int argc, const char *argv[]) {
     pyramid = new Pyramid{
             vector<Polygon>{},
             vector<Polygon>{},
-            4, 50, 200, 35, 100,
+            4, 50, 200, 20, 100,
             Point{0, 0, 0},
     };
     pyramid->countPyramid();
@@ -47,19 +47,8 @@ int main(int argc, const char *argv[]) {
 //        cout << "Image could not be opened\n";
         return -5;
     }
-    readConfig(pyramid);
-    if (isTextOn){
-        glEnable(GL_TEXTURE_2D);
-        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    }
-    GLfloat start_frame = glfwGetTime();
-    long long fps = 0;
+
     while (!glfwWindowShouldClose(window)) {
-        GLfloat current_frame = glfwGetTime();
-        if (current_frame - start_frame >= 5) {
-            break;
-        }
-        fps++;
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
@@ -81,7 +70,7 @@ int main(int argc, const char *argv[]) {
         if (isMotionOn) {
             pyramid->animate();
         }
-        pyramid->initVAO();
+        pyramid->draw();
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         if (isChangeView) glRotatef(90, 0, 1, 0);
@@ -89,7 +78,6 @@ int main(int argc, const char *argv[]) {
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-    cout << fps / 5;
     glfwDefaultWindowHints();
     glfwDestroyWindow(window);
     glfwTerminate();

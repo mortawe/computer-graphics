@@ -2,79 +2,39 @@
 struct Box {
     GLfloat *color;
     GLfloat *vertices;
-
-    void init(GLfloat m) {
+    GLuint VAO, VBO;
+    void init(GLfloat s) {
         destroy();
-        vertices = new GLfloat[4 * 6 * 3]{
-                // front face
-                0 - m, 0 + m, 0 + m, // top left
-                0 + m, 0 + m, 0 + m, // top right
-                0 + m, 0 - m, 0 + m, // bottom right
-                0 - m, 0 - m, 0 + m, // bottom left
+        vertices = new GLfloat[ 6 * 6 * 4] {
+//                -s, s, s, 1.0f, 0.0f, 0.0f,
+//                -s, -s, s, 1.0f, 0.0f, 0.0f,
+//                s, s, s, 1.0f, 0.0f, 0.0f,
+//                s, -s, s, 1.0f, 0.0f, 0.0f,
 
-                // back face
-                0 - m, 0 + m, 0 - m, // top left
-                0 + m, 0 + m, 0 - m, // top right
-                0 + m, 0 - m, 0 - m, // bottom right
-                0 - m, 0 - m, 0 - m, // bottom left
+                -s, s, -s, 1.0f, 1.0f, 0.0f,
+                -s, -s, -s, 1.0f, 1.0f, 0.0f,
+                s, s, -s, 1.0f, 1.0f, 0.0f,
+                s, -s, -s, 1.0f, 1.0f, 0.0f,
 
-                // left face
-                0 - m, 0 + m, 0 + m, // top left
-                0 - m, 0 + m, 0 - m, // top right
-                0 - m, 0 - m, 0 - m, // bottom right
-                0 - m, 0 - m, 0 + m, // bottom left
+                -s, s, s, 0.0f, 1.0f, 0.0f,
+                -s, -s, s, 0.0f, 1.0f, 0.0f,
+                -s, s, -s, 0.0f, 1.0f, 0.0f,
+                -s, -s, -s, 0.0f, 1.0f, 0.0f,
 
-                // right face
-                0 + m, 0 + m, 0 + m, // top left
-                0 + m, 0 + m, 0 - m, // top right
-                0 + m, 0 - m, 0 - m, // bottom right
-                0 + m, 0 - m, 0 + m, // bottom left
+                s, s, s, 0.0f, 1.0f, 1.0f,
+                s, -s, s, 0.0f, 1.0f, 1.0f,
+                s, s, -s, 0.0f, 1.0f, 1.0f,
+                s, -s, -s, 0.0f, 1.0f, 1.0f,
 
-                // top face
-                0 - m, 0 + m, 0 + m, // top left
-                0 - m, 0 + m, 0 - m, // top right
-                0 + m, 0 + m, 0 - m, // bottom right
-                0 + m, 0 + m, 0 + m, // bottom left
+                -s, s, -s, 0.0f, 0.0f, 1.0f,
+                -s, s, s, 0.0f, 0.0f, 1.0f,
+                s, s, -s, 0.0f, 0.0f, 1.0f,
+                s, s, s, 0.0f, 0.0f, 1.0f,
 
-                // bottom face
-                0 - m, 0 - m, 0 + m, // top left
-                0 - m, 0 - m, 0 - m, // top right
-                0 + m, 0 - m, 0 - m, // bottom right
-                0 + m, 0 - m, 0 + m  // bottom left
-        };
-
-        color = new GLfloat[4 * 6 * 3]{
-                255 / 255.0f, 154 / 255.0f, 162 / 255.0f,
-                255 / 255.0f, 154 / 255.0f, 162 / 255.0f,
-                255 / 255.0f, 154 / 255.0f, 162 / 255.0f,
-                255 / 255.0f, 154 / 255.0f, 162 / 255.0f,
-
-                255 / 255.0f, 183 / 255.0f, 178 / 255.0f,
-                255 / 255.0f, 183 / 255.0f, 178 / 255.0f,
-                255 / 255.0f, 183 / 255.0f, 178 / 255.0f,
-                255 / 255.0f, 183 / 255.0f, 178 / 255.0f,
-
-                255 / 255.0f, 218 / 255.0f, 193 / 255.0f,
-                255 / 255.0f, 218 / 255.0f, 193 / 255.0f,
-                255 / 255.0f, 218 / 255.0f, 193 / 255.0f,
-                255 / 255.0f, 218 / 255.0f, 193 / 255.0f,
-
-                226 / 255.0f, 240 / 255.0f, 203 / 255.0f,
-                226 / 255.0f, 240 / 255.0f, 203 / 255.0f,
-                226 / 255.0f, 240 / 255.0f, 203 / 255.0f,
-                226 / 255.0f, 240 / 255.0f, 203 / 255.0f,
-
-
-                181 / 255.0f, 234 / 255.0f, 215 / 255.0f,
-                181 / 255.0f, 234 / 255.0f, 215 / 255.0f,
-                181 / 255.0f, 234 / 255.0f, 215 / 255.0f,
-                181 / 255.0f, 234 / 255.0f, 215 / 255.0f,
-
-
-                199 / 255.0f, 206 / 255.0f, 234 / 255.0f,
-                199 / 255.0f, 206 / 255.0f, 234 / 255.0f,
-                199 / 255.0f, 206 / 255.0f, 234 / 255.0f,
-                199 / 255.0f, 206 / 255.0f, 234 / 255.0f,
+                -s, -s, -s, 1.0f, 0.0f, 1.0f,
+                -s, -s, s, 1.0f, 0.0f, 1.0f,
+                s, -s, -s, 1.0f, 0.0f, 1.0f,
+                s, -s, s, 1.0f, 0.0f, 1.0f
         };
     };
 
@@ -87,19 +47,18 @@ struct Box {
         }
     }
 
-    void draw() {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    void initVAO() {
+        glGenVertexArrays(1, &VAO);
+        glGenBuffers(1, &VBO);
 
-        glEnableClientState(GL_COLOR_ARRAY);
-        glEnableClientState(GL_VERTEX_ARRAY);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, (6 * 6 * 4) * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+        glBindVertexArray(VAO);
 
-        glVertexPointer(3, GL_FLOAT, 0, vertices);
-        glColorPointer(3, GL_FLOAT, 0, color);
-
-        glDrawArrays(GL_QUADS, 0, 4 * 6);
-
-        glDisableClientState(GL_COLOR_ARRAY);
-        glDisableClientState(GL_VERTEX_ARRAY);
+        glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat), (void *) (0*sizeof(GLfloat)));
+        glEnableVertexAttribArray(3);
+        glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat), (void *) (3*sizeof(GLfloat)));
+        glEnableVertexAttribArray(4);
     }
 
 };

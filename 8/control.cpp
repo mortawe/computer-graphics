@@ -8,7 +8,7 @@
 #include <vector>
 #include "light.cpp"
 #include "config.h"
-
+glm::vec3 lightColor = {1, 1, 1};
 int screenWidth = 800, screenHeight = 800;
 
 Pyramid *pyramid;
@@ -122,22 +122,7 @@ void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods
 
         // light options
         switch (key) {
-            case GLFW_KEY_1: {
-                on0 = !on0;
-                break;
-            }
-            case GLFW_KEY_2: {
-                on1 = !on1;
-                break;
-            }
-            case GLFW_KEY_3: {
-                on2 = !on2;
-                break;
-            }
-            case GLFW_KEY_4: {
-                on3 = !on3;
-                break;
-            }
+
             case GLFW_KEY_5: {
                 if (!isOnTwoSide) {
                     glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
@@ -148,8 +133,7 @@ void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods
                 break;
             }
             case GLFW_KEY_6: {
-                GLfloat c[] = {rand() % 100 / (float) 500, rand() % 100 / (float) 500, rand() % 100 / (float) 500, 1};
-                glLightModelfv(GL_LIGHT_MODEL_AMBIENT, c);
+                lightColor = {rand() % 100 / (float) 100, rand() % 100 / (float) 100, rand() % 100 / (float) 100};
                 break;
             }
             case GLFW_KEY_7: {
@@ -167,22 +151,17 @@ void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods
         switch (key) {
             case GLFW_KEY_T: {
                 isTextOn = !isTextOn;
-                if (!isTextOn) {
-                    glDisable(GL_TEXTURE_2D);
-                } else {
-                    glEnable(GL_TEXTURE_2D);
-                    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-                }
+                pyramid->initVAO(isTextOn);
                 break;
             } // texture
             case GLFW_KEY_M: {
                 isMotionOn = !isMotionOn;
                 if (isMotionOn) {
-                    pyramid->rotateX(-pyramid->rotationX * M_PI / (float) 180);
-                    pyramid->rotateY(-pyramid->rotationY * M_PI / (float) 180);
+                    pyramid->rotateX(-pyramid->rotationX);
+                    pyramid->rotateY(-pyramid->rotationY );
                 } else {
-                    pyramid->rotateY(pyramid->rotationY * M_PI / (float) 180);
-                    pyramid->rotateX(pyramid->rotationX * M_PI / (float) 180);
+                    pyramid->rotateY(pyramid->rotationY );
+                    pyramid->rotateX(pyramid->rotationX );
                 }
                 break;
             } // motion

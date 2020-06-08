@@ -22,32 +22,32 @@ void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods
         if (!isMotionOn) {
             switch (key){
                 case GLFW_KEY_F:
-                    rotationX += Speed;
-//                    list->rotate(5*M_PI/(float) 180, 0);
+                    rotationX += speed;
+//                    pyramid->rotate(5*M_PI/(float) 180, 0);
                     break;
                 case GLFW_KEY_V:
-//                    list->rotate(-5*M_PI/(float) 180, 0);
-                    rotationX -= Speed;
+//                    pyramid->rotate(-5*M_PI/(float) 180, 0);
+                    rotationX -= speed;
                     break;
                 case GLFW_KEY_C:
-//                    list->rotate(0, 5*M_PI/(float) 180);
-                    rotationY += Speed;
+//                    pyramid->rotate(0, 5*M_PI/(float) 180);
+                    rotationY += speed;
                     break;
                 case GLFW_KEY_B:
-//                    list->rotate(0, -5*M_PI/(float) 180);
-                    rotationY -= Speed;
+//                    pyramid->rotate(0, -5*M_PI/(float) 180);
+                    rotationY -= speed;
                     break;
                 case GLFW_KEY_W:
-                    translationY += Speed * 5;
+                    translationY += speed * 5;
                     break;
                 case GLFW_KEY_S:
-                    translationY -= Speed * 5;
+                    translationY -= speed * 5;
                     break;
                 case GLFW_KEY_A:
-                    translationX -= Speed * 5;
+                    translationX -= speed * 5;
                     break;
                 case GLFW_KEY_D:
-                    translationX += Speed * 5;
+                    translationX += speed * 5;
                     break;
             }
         }

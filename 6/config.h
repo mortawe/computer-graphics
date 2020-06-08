@@ -9,9 +9,9 @@ using namespace  std;
 
 bool on1, on2, on3 = false;
 bool on0 = true;
-const char *imagepath = "../6/1.bmp";
+const char *imagepath = "1.bmp";
 bool isTextOn = true;
-const GLfloat Speed = 5; // not
+const GLfloat speed = 5; // not
 GLfloat zoom = 1;
 bool isMotionOn = false;
 bool isOnTwoSide = false, isModelLocal = false, isChangeView = false;
@@ -22,7 +22,7 @@ GLfloat rotationZ = 0.0f;
 
 
 void readConfig(Pyramid *pyramid) {
-    YAML::Node config = YAML::LoadFile("../7/config.yaml");
+    YAML::Node config = YAML::LoadFile("config.yaml");
 
     on0 = config["on0"].as<bool>();
     on1 = config["on1"].as<bool>();

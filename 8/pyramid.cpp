@@ -6,7 +6,7 @@
 #include <GL/glew.h>
 #include "config.h"
 #include "memory.h"
-
+#include "config.h"
 
 using namespace std;
 GLfloat multy = 3;
@@ -61,7 +61,6 @@ public:
         glEnd();
     }
 
-private:
 
     void countNormals();
 
@@ -70,22 +69,37 @@ private:
     void initVAO();
 
 
-
+    void initVAO(bool isTextOn);
 };
 
 
-void Pyramid::initVAO() {
+void Pyramid::initVAO(bool isTextOn) {
+    GLfloat *v = (GLfloat*)malloc( layersN * vertNum * 2 * 3 * 5 * sizeof(GLfloat));
+
+    for (int i = 0; i < layersN * vertNum * 2 * 3; i++) {
+        v[i * 5 + 0] = vertices[i * 3 + 0];
+        v[i * 5 + 1] = vertices[i * 3 + 1];
+        v[i * 5 + 2] = vertices[i * 3 + 2];
+        v[i * 5 + 3] = texCoord[i * 2 + 0];
+        v[i * 5 + 4] = texCoord[i * 2 + 1];
+    }
+
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, layersN * vertNum * 2 * 3 * 3 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, layersN * vertNum * 2 * 3 * 5 * sizeof(GLfloat), v, GL_STATIC_DRAW);
     glBindVertexArray(VAO);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(4 * sizeof(float)));
+    if (isTextOn) {
+        glEnableVertexAttribArray(2);
+    }
+    free(v);
 }
 
 void Pyramid::destroy() {
@@ -98,7 +112,6 @@ void Pyramid::destroy() {
     if (normals != NULL) {
         free(normals);
     }
-
     if (texCoord != NULL) {
         free(texCoord);
     }
@@ -227,15 +240,9 @@ void Pyramid::count() {
     }
     free(v);
 
-//    glGenBuffers(1, &vbo); // Generate 1 buffer
-//    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-//    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices),
-//                 vertices, GL_STATIC_DRAW);
-//
-
     countNormals();
     countTexCoords();
-    initVAO();
+    initVAO(true);
 }
 
 void Pyramid::countNormals() {

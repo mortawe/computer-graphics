@@ -1,4 +1,4 @@
-//#include "list.cpp"
+//#include "pyramid.cpp"
 
 //vector<GLfloat> buffer = {
 //        -1.0f, -1.0f, -1.0f,
